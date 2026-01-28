@@ -16,12 +16,11 @@ const TrendsChart: React.FC<Props> = ({ params }) => {
   const data = useMemo(() => {
     const points = [];
     if (mode === 'pH') {
-      const basePh = params.pH;
-      // Sweep a range around current pH
-      for (let ph = Math.max(6, basePh - 1.5); ph <= Math.min(10, basePh + 1.5); ph += 0.1) {
+      // User requested pH range from 7.5 to 9
+      for (let ph = 7.5; ph <= 9.05; ph += 0.05) {
         const results = calculateWaterQuality({ ...params, pH: ph });
         points.push({
-          x: parseFloat(ph.toFixed(1)),
+          x: parseFloat(ph.toFixed(2)),
           ccpp: parseFloat(results.ccpp.toFixed(2)),
           lsi: parseFloat(results.lsi.toFixed(2)),
         });
@@ -74,6 +73,8 @@ const TrendsChart: React.FC<Props> = ({ params }) => {
             <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#f1f5f9" />
             <XAxis 
               dataKey="x" 
+              type="number"
+              domain={mode === 'pH' ? [7.5, 9] : ['auto', 'auto']}
               fontSize={10} 
               stroke="#94a3b8" 
               label={{ 
@@ -84,9 +85,8 @@ const TrendsChart: React.FC<Props> = ({ params }) => {
               }} 
             />
             {/* 
-                Forcing the vertical axis to [-10, 10]. 
-                allowDataOverflow={true} is REQUIRED to prevent Recharts from 
-                automatically expanding the axis to include data points like -265 or 88.
+                Vertical axis is locked to [-10, 10] for standardized visual comparison.
+                allowDataOverflow={true} ensures clipping at these boundaries.
             */}
             <YAxis 
               domain={[-10, 10]}
@@ -107,10 +107,9 @@ const TrendsChart: React.FC<Props> = ({ params }) => {
             />
             <Legend verticalAlign="top" height={36} iconType="circle" wrapperStyle={{ fontSize: '10px', fontWeight: 'bold' }} />
             
-            {/* Equilibrium Center Line */}
             <ReferenceLine y={0} stroke="#94a3b8" strokeWidth={1} />
             
-            {/* CCPP Target Boundary Lines */}
+            {/* Target Boundaries */}
             <ReferenceLine 
               y={5} 
               stroke="#cbd5e1" 
@@ -124,7 +123,7 @@ const TrendsChart: React.FC<Props> = ({ params }) => {
               label={{ position: 'insideRight', value: '-5', fontSize: 9, fill: '#94a3b8', dy: 10 }} 
             />
 
-            {/* Current Operating Point Indicator */}
+            {/* Current Operating Point */}
             <ReferenceLine 
               x={mode === 'pH' ? params.pH : params.calcium} 
               stroke="#3b82f6" 
@@ -155,7 +154,7 @@ const TrendsChart: React.FC<Props> = ({ params }) => {
         </ResponsiveContainer>
       </div>
       <p className="text-[10px] text-slate-400 mt-4 italic text-center">
-        The vertical axis is locked to a range of -10 to +10 for standardized visual comparison.
+        The vertical axis shows CCPP and LSI values. {mode === 'pH' ? 'Horizontal axis is fixed from pH 7.5 to 9.0.' : 'Horizontal axis shows ±100 mg/L range from current calcium.'}
       </p>
     </div>
   );
