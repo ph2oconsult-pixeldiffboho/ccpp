@@ -68,7 +68,7 @@ const TrendsChart: React.FC<Props> = ({ params }) => {
 
       <div className="h-[300px] w-full">
         <ResponsiveContainer width="100%" height="100%">
-          <LineChart data={data} margin={{ top: 5, right: 20, bottom: 20, left: 0 }}>
+          <LineChart data={data} margin={{ top: 20, right: 30, bottom: 20, left: 0 }}>
             <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#f1f5f9" />
             <XAxis 
               dataKey="x" 
@@ -97,12 +97,31 @@ const TrendsChart: React.FC<Props> = ({ params }) => {
               formatter={(value: number, name: string) => [value, name.toUpperCase()]}
             />
             <Legend verticalAlign="top" height={36} iconType="circle" wrapperStyle={{ fontSize: '10px', fontWeight: 'bold' }} />
-            <ReferenceLine y={0} stroke="#cbd5e1" strokeWidth={2} />
+            
+            {/* Equilibrium Center Line */}
+            <ReferenceLine y={0} stroke="#94a3b8" strokeWidth={1} />
+            
+            {/* CCPP Target Boundary Lines */}
+            <ReferenceLine 
+              y={5} 
+              stroke="#cbd5e1" 
+              strokeDasharray="4 4" 
+              label={{ position: 'insideRight', value: '+5 CCPP', fontSize: 9, fill: '#94a3b8', dy: -10 }} 
+            />
+            <ReferenceLine 
+              y={-5} 
+              stroke="#cbd5e1" 
+              strokeDasharray="4 4" 
+              label={{ position: 'insideRight', value: '-5 CCPP', fontSize: 9, fill: '#94a3b8', dy: 10 }} 
+            />
+
+            {/* Current Operating Point */}
             <ReferenceLine 
               x={mode === 'pH' ? params.pH : params.calcium} 
               stroke="#3b82f6" 
               strokeDasharray="5 5" 
             />
+
             <Line 
               name="CCPP (mg/L)"
               type="monotone" 
@@ -125,7 +144,7 @@ const TrendsChart: React.FC<Props> = ({ params }) => {
         </ResponsiveContainer>
       </div>
       <p className="text-[10px] text-slate-400 mt-4 italic text-center">
-        This chart visualizes how CCPP and LSI change when only {mode} is adjusted, holding other parameters constant.
+        Threshold lines at ±5 mg/L CCPP indicate the typical target range for water stabilization.
       </p>
     </div>
   );
