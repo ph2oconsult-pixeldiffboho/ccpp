@@ -16,8 +16,8 @@ const TrendsChart: React.FC<Props> = ({ params }) => {
   const data = useMemo(() => {
     const points = [];
     if (mode === 'pH') {
-      // Fixed range 7.5 to 9.5 as requested
-      for (let ph = 7.5; ph <= 9.5; ph += 0.05) {
+      // Adjusted range 7.0 to 9.0 as requested
+      for (let ph = 7.0; ph <= 9.0; ph += 0.05) {
         const results = calculateWaterQuality({ ...params, pH: ph });
         points.push({
           x: parseFloat(ph.toFixed(2)),
@@ -76,8 +76,8 @@ const TrendsChart: React.FC<Props> = ({ params }) => {
             <XAxis 
               dataKey="x" 
               type="number"
-              domain={mode === 'pH' ? [7.5, 9.5] : ['auto', 'auto']}
-              ticks={mode === 'pH' ? [7.5, 8.0, 8.5, 9.0, 9.5] : undefined}
+              domain={mode === 'pH' ? [7.0, 9.0] : ['auto', 'auto']}
+              ticks={mode === 'pH' ? [7.0, 7.5, 8.0, 8.5, 9.0] : undefined}
               allowDataOverflow={true}
               fontSize={10} 
               stroke="#94a3b8" 
@@ -160,7 +160,7 @@ const TrendsChart: React.FC<Props> = ({ params }) => {
                 fontSize: 10, 
                 fontWeight: 700,
                 // Only show label if within the visible range
-                ...(mode === 'pH' && (params.pH < 7.5 || params.pH > 9.5) ? { value: '' } : {})
+                ...(mode === 'pH' && (params.pH < 7.0 || params.pH > 9.0) ? { value: '' } : {})
               }}
             />
 
@@ -192,7 +192,7 @@ const TrendsChart: React.FC<Props> = ({ params }) => {
       </div>
       <div className="flex justify-between items-center text-[10px] text-slate-400 mt-4 px-2">
         <span className="font-medium bg-slate-50 px-2 py-0.5 rounded border border-slate-100 italic">
-          Scales: pH 7.5-9.5 | CCPP ±10 | LSI ±3
+          Scales: pH 7.0-9.0 | CCPP ±10 | LSI ±3
         </span>
         <span className="text-blue-500 font-bold">Blue Dashed Line = Current Operating Point</span>
       </div>
