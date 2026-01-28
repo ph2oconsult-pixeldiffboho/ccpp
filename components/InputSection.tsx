@@ -1,4 +1,3 @@
-
 import React from 'react';
 import { WaterParameters } from '../types';
 
@@ -66,11 +65,11 @@ const InputSection: React.FC<Props> = ({ params, onChange }) => {
       </h2>
       
       <div className="space-y-2">
-        <InputField label="pH Level" unit="pH" value={params.pH} min={6} max={10} step={0.1} paramKey="pH" />
+        <InputField label="pH Level" unit="pH" value={params.pH} min={6} max={10} step={0.01} paramKey="pH" />
         <InputField label="Temperature" unit="°C" value={params.temp} min={0} max={60} step={1} paramKey="temp" />
-        <InputField label="TDS" unit="mg/L" value={params.tds} min={0} max={2000} step={10} paramKey="tds" />
-        <InputField label="Calcium Hardness" unit="mg/L CaCO₃" value={params.calcium} min={5} max={500} step={5} paramKey="calcium" />
-        <InputField label="Total Alkalinity" unit="mg/L CaCO₃" value={params.alkalinity} min={5} max={500} step={5} paramKey="alkalinity" />
+        <InputField label="TDS" unit="mg/L" value={params.tds} min={0} max={2000} step={1} paramKey="tds" />
+        <InputField label="Calcium Hardness" unit="mg/L CaCO₃" value={params.calcium} min={5} max={500} step={1} paramKey="calcium" />
+        <InputField label="Total Alkalinity" unit="mg/L CaCO₃" value={params.alkalinity} min={5} max={500} step={1} paramKey="alkalinity" />
       </div>
     </div>
   );
