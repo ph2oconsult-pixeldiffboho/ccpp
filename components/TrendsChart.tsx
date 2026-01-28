@@ -17,6 +17,7 @@ const TrendsChart: React.FC<Props> = ({ params }) => {
     const points = [];
     if (mode === 'pH') {
       const basePh = params.pH;
+      // Sweep a range around current pH
       for (let ph = Math.max(6, basePh - 1.5); ph <= Math.min(10, basePh + 1.5); ph += 0.1) {
         const results = calculateWaterQuality({ ...params, pH: ph });
         points.push({
@@ -27,6 +28,7 @@ const TrendsChart: React.FC<Props> = ({ params }) => {
       }
     } else {
       const baseCa = params.calcium;
+      // Sweep a range around current Calcium
       for (let ca = Math.max(5, baseCa - 100); ca <= baseCa + 100; ca += 10) {
         const results = calculateWaterQuality({ ...params, calcium: ca });
         points.push({
@@ -81,11 +83,13 @@ const TrendsChart: React.FC<Props> = ({ params }) => {
                 fontSize: 10 
               }} 
             />
+            {/* Set domain to [-10, 10] as requested for the CCPP/LSI values axis */}
             <YAxis 
+              domain={[-10, 10]}
               fontSize={10} 
               stroke="#94a3b8" 
               label={{ 
-                value: 'Value', 
+                value: 'CCPP / LSI', 
                 angle: -90, 
                 position: 'insideLeft', 
                 fontSize: 10 
@@ -106,16 +110,16 @@ const TrendsChart: React.FC<Props> = ({ params }) => {
               y={5} 
               stroke="#cbd5e1" 
               strokeDasharray="4 4" 
-              label={{ position: 'insideRight', value: '+5 CCPP', fontSize: 9, fill: '#94a3b8', dy: -10 }} 
+              label={{ position: 'insideRight', value: '+5', fontSize: 9, fill: '#94a3b8', dy: -10 }} 
             />
             <ReferenceLine 
               y={-5} 
               stroke="#cbd5e1" 
               strokeDasharray="4 4" 
-              label={{ position: 'insideRight', value: '-5 CCPP', fontSize: 9, fill: '#94a3b8', dy: 10 }} 
+              label={{ position: 'insideRight', value: '-5', fontSize: 9, fill: '#94a3b8', dy: 10 }} 
             />
 
-            {/* Current Operating Point */}
+            {/* Current Operating Point Indicator */}
             <ReferenceLine 
               x={mode === 'pH' ? params.pH : params.calcium} 
               stroke="#3b82f6" 
@@ -144,7 +148,7 @@ const TrendsChart: React.FC<Props> = ({ params }) => {
         </ResponsiveContainer>
       </div>
       <p className="text-[10px] text-slate-400 mt-4 italic text-center">
-        Threshold lines at ±5 mg/L CCPP indicate the typical target range for water stabilization.
+        The vertical axis shows CCPP (mg/L) and LSI. Threshold lines indicate typical target ranges.
       </p>
     </div>
   );
