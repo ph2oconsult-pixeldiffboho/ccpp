@@ -83,17 +83,17 @@ const App: React.FC = () => {
               </h1>
               <p className="text-slate-400 mt-1 text-sm font-medium">CCPP & LSI Engineering Suite</p>
             </div>
-            <div className="flex items-center gap-4">
+            <div className="flex items-center gap-3">
               <button 
                 onClick={() => window.print()}
-                className="text-xs bg-white text-slate-900 px-4 py-2 rounded-lg font-bold transition flex items-center gap-2 hover:bg-slate-100 border border-slate-700"
+                className="text-sm bg-blue-600 text-white px-5 py-2.5 rounded-lg font-black transition flex items-center gap-2 hover:bg-blue-700 shadow-lg shadow-blue-900/40 border border-blue-500"
               >
                 <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2.5" d="M17 17h2a2 2 0 002-2v-4a2 2 0 00-2-2H5a2 2 0 00-2 2v4a2 2 0 002 2h2m2 4h6a2 2 0 002-2v-4a2 2 0 00-2-2H9a2 2 0 00-2 2v4a2 2 0 002 2zm8-12V5a2 2 0 00-2-2H9a2 2 0 00-2 2v4h10z" /></svg>
                 Print Report
               </button>
               <button 
                 onClick={() => setParams(DEFAULT_PARAMS as unknown as WaterParameters)}
-                className="text-xs border border-slate-700 hover:bg-slate-800 px-4 py-2 rounded-lg font-bold transition"
+                className="text-xs text-slate-300 border border-slate-700 hover:bg-slate-800 px-4 py-2 rounded-lg font-bold transition"
               >
                 Reset
               </button>
@@ -121,7 +121,7 @@ const App: React.FC = () => {
              </div>
           </div>
 
-          <div className="lg:col-span-8 flex flex-col gap-6">
+          <div className="lg:col-span-8 flex flex-col gap-6 min-w-0">
             <ResultsSection results={results} onSave={handleSaveScenario} />
             
             <div className="print:hidden">
