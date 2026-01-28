@@ -2,9 +2,10 @@
 import { GoogleGenAI } from "@google/genai";
 import { WaterParameters, CalculationResults } from "../types";
 
-const ai = new GoogleGenAI({ apiKey: process.env.API_KEY || '' });
-
 export const analyzeWaterProfile = async (params: WaterParameters, results: CalculationResults) => {
+  // Initialize the AI client inside the function to ensure the API key is available
+  const ai = new GoogleGenAI({ apiKey: process.env.API_KEY });
+  
   try {
     const prompt = `
       As a water chemistry expert, analyze the following water profile and provide engineering recommendations.
@@ -29,9 +30,13 @@ export const analyzeWaterProfile = async (params: WaterParameters, results: Calc
       contents: prompt,
     });
 
+    // Directly access .text property as per guidelines
     return response.text;
-  } catch (error) {
+  } catch (error: any) {
     console.error("Gemini Error:", error);
-    return "Failed to fetch AI analysis. Please check your network or API configuration.";
+    if (error?.message?.includes("API key")) {
+      return "The Gemini API key is missing or invalid. Please check your environment configuration.";
+    }
+    return "An error occurred while generating the AI analysis. Please try again later.";
   }
 };
