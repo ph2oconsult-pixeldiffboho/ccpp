@@ -67,10 +67,11 @@ const TrendsChart: React.FC<Props> = ({ params }) => {
         </div>
       </div>
 
-      <div className="h-[300px] w-full">
+      <div className="h-[350px] w-full">
         <ResponsiveContainer width="100%" height="100%">
-          <LineChart data={data} margin={{ top: 20, right: 30, bottom: 20, left: 0 }}>
+          <LineChart data={data} margin={{ top: 20, right: 10, bottom: 20, left: 0 }}>
             <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#f1f5f9" />
+            
             <XAxis 
               dataKey="x" 
               type="number"
@@ -84,43 +85,67 @@ const TrendsChart: React.FC<Props> = ({ params }) => {
                 fontSize: 10 
               }} 
             />
-            {/* 
-                Vertical axis is locked to [-10, 10] for standardized visual comparison.
-                allowDataOverflow={true} ensures clipping at these boundaries.
-            */}
+
+            {/* Left Y-Axis for CCPP */}
             <YAxis 
+              yAxisId="left"
               domain={[-10, 10]}
               allowDataOverflow={true}
               fontSize={10} 
-              stroke="#94a3b8" 
+              stroke="#0d9488" 
               label={{ 
-                value: 'CCPP / LSI', 
+                value: 'CCPP (mg/L)', 
                 angle: -90, 
                 position: 'insideLeft', 
-                fontSize: 10 
+                fontSize: 10,
+                fill: '#0d9488'
               }} 
             />
+
+            {/* Right Y-Axis for LSI */}
+            <YAxis 
+              yAxisId="right"
+              orientation="right"
+              domain={[-2, 2]}
+              allowDataOverflow={true}
+              fontSize={10} 
+              stroke="#8b5cf6" 
+              label={{ 
+                value: 'LSI', 
+                angle: 90, 
+                position: 'insideRight', 
+                fontSize: 10,
+                fill: '#8b5cf6'
+              }} 
+            />
+
             <Tooltip 
               contentStyle={{ borderRadius: '8px', border: 'none', boxShadow: '0 4px 6px -1px rgb(0 0 0 / 0.1)' }}
               labelStyle={{ fontWeight: 'bold', color: '#1e293b' }}
-              formatter={(value: number, name: string) => [value, name.toUpperCase()]}
+              formatter={(value: number, name: string) => [value, name]}
             />
+            
             <Legend verticalAlign="top" height={36} iconType="circle" wrapperStyle={{ fontSize: '10px', fontWeight: 'bold' }} />
             
-            <ReferenceLine y={0} stroke="#94a3b8" strokeWidth={1} />
+            {/* Common zero reference */}
+            <ReferenceLine yAxisId="left" y={0} stroke="#94a3b8" strokeWidth={1} />
             
-            {/* Target Boundaries */}
+            {/* CCPP Target Boundaries on Left Axis */}
             <ReferenceLine 
+              yAxisId="left"
               y={5} 
-              stroke="#cbd5e1" 
+              stroke="#0d9488" 
               strokeDasharray="4 4" 
-              label={{ position: 'insideRight', value: '+5', fontSize: 9, fill: '#94a3b8', dy: -10 }} 
+              strokeOpacity={0.3}
+              label={{ position: 'insideLeft', value: '+5', fontSize: 9, fill: '#0d9488', dx: 10 }} 
             />
             <ReferenceLine 
+              yAxisId="left"
               y={-5} 
-              stroke="#cbd5e1" 
+              stroke="#0d9488" 
               strokeDasharray="4 4" 
-              label={{ position: 'insideRight', value: '-5', fontSize: 9, fill: '#94a3b8', dy: 10 }} 
+              strokeOpacity={0.3}
+              label={{ position: 'insideLeft', value: '-5', fontSize: 9, fill: '#0d9488', dx: 10 }} 
             />
 
             {/* Current Operating Point */}
@@ -131,6 +156,7 @@ const TrendsChart: React.FC<Props> = ({ params }) => {
             />
 
             <Line 
+              yAxisId="left"
               name="CCPP (mg/L)"
               type="monotone" 
               dataKey="ccpp" 
@@ -141,6 +167,7 @@ const TrendsChart: React.FC<Props> = ({ params }) => {
               isAnimationActive={false}
             />
             <Line 
+              yAxisId="right"
               name="LSI"
               type="monotone" 
               dataKey="lsi" 
@@ -153,9 +180,10 @@ const TrendsChart: React.FC<Props> = ({ params }) => {
           </LineChart>
         </ResponsiveContainer>
       </div>
-      <p className="text-[10px] text-slate-400 mt-4 italic text-center">
-        The vertical axis shows CCPP and LSI values. {mode === 'pH' ? 'Horizontal axis is fixed from pH 7.5 to 9.0.' : 'Horizontal axis shows ±100 mg/L range from current calcium.'}
-      </p>
+      <div className="flex justify-between text-[10px] text-slate-400 mt-4 italic">
+        <span>Left Axis: CCPP (Locked -10 to +10 mg/L)</span>
+        <span>Right Axis: LSI (Locked -2.0 to +2.0)</span>
+      </div>
     </div>
   );
 };
