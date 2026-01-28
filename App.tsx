@@ -23,7 +23,7 @@ const App: React.FC = () => {
   };
 
   const handleSaveScenario = () => {
-    const name = `Scenario ${scenarios.length + 1} (${new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })})`;
+    const name = `Profile ${scenarios.length + 1} (${new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })})`;
     const newScenario = {
       id: crypto.randomUUID(),
       name,
@@ -86,10 +86,10 @@ const App: React.FC = () => {
             <div className="flex items-center gap-4">
               <button 
                 onClick={() => window.print()}
-                className="text-xs border border-slate-700 hover:bg-slate-800 px-4 py-2 rounded-lg font-bold transition flex items-center gap-2"
+                className="text-xs bg-white text-slate-900 px-4 py-2 rounded-lg font-bold transition flex items-center gap-2 hover:bg-slate-100 border border-slate-700"
               >
-                <svg className="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M17 17h2a2 2 0 002-2v-4a2 2 0 00-2-2H5a2 2 0 00-2 2v4a2 2 0 002 2h2m2 4h6a2 2 0 002-2v-4a2 2 0 00-2-2H9a2 2 0 00-2 2v4a2 2 0 002 2zm8-12V5a2 2 0 00-2-2H9a2 2 0 00-2 2v4h10z" /></svg>
-                Export
+                <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2.5" d="M17 17h2a2 2 0 002-2v-4a2 2 0 00-2-2H5a2 2 0 00-2 2v4a2 2 0 002 2h2m2 4h6a2 2 0 002-2v-4a2 2 0 00-2-2H9a2 2 0 00-2 2v4a2 2 0 002 2zm8-12V5a2 2 0 00-2-2H9a2 2 0 00-2 2v4h10z" /></svg>
+                Print Report
               </button>
               <button 
                 onClick={() => setParams(DEFAULT_PARAMS as unknown as WaterParameters)}
@@ -122,8 +122,17 @@ const App: React.FC = () => {
           </div>
 
           <div className="lg:col-span-8 flex flex-col gap-6">
-            <ResultsSection results={results} />
+            <ResultsSection results={results} onSave={handleSaveScenario} />
             
+            <div className="print:hidden">
+              <ScenarioManager 
+                scenarios={scenarios} 
+                onDelete={handleDeleteScenario} 
+                onRestore={setParams} 
+                onSave={handleSaveScenario} 
+              />
+            </div>
+
             {aiAnalysis && (
               <div className="bg-white border-l-4 border-l-blue-600 p-8 rounded-xl shadow-xl prose prose-blue max-w-none print:shadow-none print:border-slate-200">
                 <h3 className="font-black text-slate-800 flex items-center gap-3 text-lg mb-4">AI Engineering Assessment</h3>
@@ -133,15 +142,6 @@ const App: React.FC = () => {
 
             <div className="print:hidden">
               <TrendsChart params={params} />
-            </div>
-
-            <div className="print:hidden">
-              <ScenarioManager 
-                scenarios={scenarios} 
-                onDelete={handleDeleteScenario} 
-                onRestore={setParams} 
-                onSave={handleSaveScenario} 
-              />
             </div>
 
             <div className="print:hidden">
@@ -163,4 +163,3 @@ const App: React.FC = () => {
 };
 
 export default App;
-
