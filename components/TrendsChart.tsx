@@ -83,9 +83,14 @@ const TrendsChart: React.FC<Props> = ({ params }) => {
                 fontSize: 10 
               }} 
             />
-            {/* Set domain to [-10, 10] as requested for the CCPP/LSI values axis */}
+            {/* 
+                Forcing the vertical axis to [-10, 10]. 
+                allowDataOverflow={true} is REQUIRED to prevent Recharts from 
+                automatically expanding the axis to include data points like -265 or 88.
+            */}
             <YAxis 
               domain={[-10, 10]}
+              allowDataOverflow={true}
               fontSize={10} 
               stroke="#94a3b8" 
               label={{ 
@@ -134,6 +139,7 @@ const TrendsChart: React.FC<Props> = ({ params }) => {
               strokeWidth={3} 
               dot={false} 
               activeDot={{ r: 6 }} 
+              isAnimationActive={false}
             />
             <Line 
               name="LSI"
@@ -143,12 +149,13 @@ const TrendsChart: React.FC<Props> = ({ params }) => {
               strokeWidth={2} 
               strokeDasharray="3 3"
               dot={false} 
+              isAnimationActive={false}
             />
           </LineChart>
         </ResponsiveContainer>
       </div>
       <p className="text-[10px] text-slate-400 mt-4 italic text-center">
-        The vertical axis shows CCPP (mg/L) and LSI. Threshold lines indicate typical target ranges.
+        The vertical axis is locked to a range of -10 to +10 for standardized visual comparison.
       </p>
     </div>
   );
