@@ -16,7 +16,7 @@ const TrendsChart: React.FC<Props> = ({ params }) => {
   const data = useMemo(() => {
     const points = [];
     if (mode === 'pH') {
-      for (let ph = 6.5; ph <= 9.5; ph += 0.1) {
+      for (let ph = 6.5; ph <= 9.5; ph += 0.05) {
         const results = calculateWaterQuality({ ...params, pH: ph });
         points.push({
           x: parseFloat(ph.toFixed(2)),
@@ -28,7 +28,7 @@ const TrendsChart: React.FC<Props> = ({ params }) => {
       const baseCa = params.calcium;
       const start = Math.max(0, baseCa - 150);
       const end = baseCa + 150;
-      for (let ca = start; ca <= end; ca += 10) {
+      for (let ca = start; ca <= end; ca += 5) {
         const results = calculateWaterQuality({ ...params, calcium: ca });
         points.push({
           x: ca,
@@ -67,7 +67,6 @@ const TrendsChart: React.FC<Props> = ({ params }) => {
         </div>
       </div>
 
-      {/* The container below has explicit min-height to fix the console width(-1) error */}
       <div className="h-[350px] w-full min-h-[350px] relative">
         <ResponsiveContainer width="100%" height="100%">
           <LineChart data={data} margin={{ top: 20, right: 10, bottom: 20, left: 0 }}>
@@ -79,17 +78,23 @@ const TrendsChart: React.FC<Props> = ({ params }) => {
               domain={['auto', 'auto']}
               fontSize={10} 
               stroke="#94a3b8" 
+              tick={{ fill: '#64748b' }}
               label={{ 
-                value: mode === 'pH' ? 'pH' : 'Calcium (mg/L)', 
+                value: mode === 'pH' ? 'Input pH' : 'Calcium (mg/L)', 
                 position: 'insideBottom', 
                 offset: -10, 
-                fontSize: 10 
+                fontSize: 10,
+                fontWeight: 600,
+                fill: '#64748b'
               }} 
             />
 
+            {/* CCPP Axis: Fixed -10 to 10 */}
             <YAxis 
               yAxisId="left"
-              domain={['auto', 'auto']}
+              domain={[-10, 10]}
+              allowDataOverflow={true}
+              ticks={[-10, -5, 0, 5, 10]}
               fontSize={10} 
               stroke="#0d9488" 
               label={{ 
@@ -97,14 +102,18 @@ const TrendsChart: React.FC<Props> = ({ params }) => {
                 angle: -90, 
                 position: 'insideLeft', 
                 fontSize: 10,
+                fontWeight: 700,
                 fill: '#0d9488'
               }} 
             />
 
+            {/* LSI Axis: Fixed -3 to 3 */}
             <YAxis 
               yAxisId="right"
               orientation="right"
-              domain={['auto', 'auto']}
+              domain={[-3, 3]}
+              allowDataOverflow={true}
+              ticks={[-3, -2, -1, 0, 1, 2, 3]}
               fontSize={10} 
               stroke="#8b5cf6" 
               label={{ 
@@ -112,24 +121,36 @@ const TrendsChart: React.FC<Props> = ({ params }) => {
                 angle: 90, 
                 position: 'insideRight', 
                 fontSize: 10,
+                fontWeight: 700,
                 fill: '#8b5cf6'
               }} 
             />
 
             <Tooltip 
-              contentStyle={{ borderRadius: '8px', border: 'none', boxShadow: '0 4px 6px -1px rgb(0 0 0 / 0.1)' }}
-              labelStyle={{ fontWeight: 'bold', color: '#1e293b' }}
-              formatter={(value: number) => [value, 'Value']}
+              contentStyle={{ 
+                borderRadius: '12px', 
+                border: '1px solid #e2e8f0', 
+                boxShadow: '0 10px 15px -3px rgb(0 0 0 / 0.1)',
+                fontSize: '11px',
+                fontWeight: 600
+              }}
+              labelStyle={{ fontWeight: '800', color: '#1e293b', marginBottom: '4px' }}
+              formatter={(value: number, name: string) => [
+                <span style={{ color: name.includes('CCPP') ? '#0d9488' : '#8b5cf6' }}>{value.toFixed(2)}</span>, 
+                name
+              ]}
             />
             
-            <Legend verticalAlign="top" height={36} iconType="circle" wrapperStyle={{ fontSize: '10px', fontWeight: 'bold' }} />
+            <Legend verticalAlign="top" height={36} iconType="circle" wrapperStyle={{ fontSize: '10px', fontWeight: 'bold', paddingBottom: '20px' }} />
             
-            <ReferenceLine yAxisId="left" y={0} stroke="#94a3b8" strokeWidth={1} />
+            <ReferenceLine yAxisId="left" y={0} stroke="#94a3b8" strokeWidth={1} strokeDasharray="3 3" />
 
             <ReferenceLine 
               x={mode === 'pH' ? params.pH : params.calcium} 
               stroke="#3b82f6" 
-              strokeDasharray="5 5" 
+              strokeWidth={2}
+              strokeDasharray="5 5"
+              label={{ value: 'Current', position: 'top', fill: '#3b82f6', fontSize: 10, fontWeight: 700 }}
             />
 
             <Line 
@@ -140,25 +161,27 @@ const TrendsChart: React.FC<Props> = ({ params }) => {
               stroke="#0d9488" 
               strokeWidth={3} 
               dot={false} 
-              activeDot={{ r: 6 }} 
+              activeDot={{ r: 6, strokeWidth: 0 }} 
               isAnimationActive={false}
             />
             <Line 
               yAxisId="right"
-              name="LSI"
+              name="Langelier Index"
               type="monotone" 
               dataKey="lsi" 
               stroke="#8b5cf6" 
               strokeWidth={2} 
-              strokeDasharray="3 3"
+              strokeDasharray="4 4"
               dot={false} 
+              activeDot={{ r: 4, strokeWidth: 0 }}
               isAnimationActive={false}
             />
           </LineChart>
         </ResponsiveContainer>
       </div>
-      <div className="flex justify-between text-[10px] text-slate-400 mt-4 italic">
-        <span>Dynamic Y-Axes: Tracking trends relative to current baseline</span>
+      <div className="flex justify-between items-center text-[10px] text-slate-400 mt-4 px-2">
+        <span className="font-medium bg-slate-50 px-2 py-0.5 rounded border border-slate-100 italic">Fixed Scale: CCPP ±10 | LSI ±3</span>
+        <span className="text-blue-500 font-bold">Blue Dashed Line = Current Operating Point</span>
       </div>
     </div>
   );
