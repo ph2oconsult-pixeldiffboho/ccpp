@@ -14,7 +14,7 @@ const InputSection: React.FC<Props> = ({ params, onChange }) => {
     onChange({ ...params, [key]: numVal });
   };
 
-  const InputField = ({ label, unit, value, min, max, step, paramKey, subtitle }: any) => (
+  const InputField = ({ label, value, min, max, step, paramKey, subtitle }: any) => (
     <div className="mb-6 last:mb-0">
       <div className="flex justify-between items-center mb-1">
         <label className="text-sm font-bold text-slate-700 flex flex-col">
@@ -63,16 +63,16 @@ const InputSection: React.FC<Props> = ({ params, onChange }) => {
       </h2>
       
       <div className="space-y-2">
-        <InputField label="pH Level" unit="pH" value={params.pH} min={6} max={10} step={0.01} paramKey="pH" />
-        <InputField label="Temperature" unit="°C" value={params.temp} min={0} max={60} step={1} paramKey="temp" />
-        <InputField label="TDS" unit="mg/L" value={params.tds} min={0} max={2000} step={1} paramKey="tds" />
+        <InputField label="pH Level" value={params.pH} min={6} max={10} step={0.01} paramKey="pH" />
+        <InputField label="Temperature" subtitle="°C" value={params.temp} min={0} max={60} step={1} paramKey="temp" />
+        <InputField label="TDS" subtitle="mg/L" value={params.tds} min={0} max={2000} step={1} paramKey="tds" />
         <InputField 
           label="Calcium" 
-          subtitle="mg/L as Ca" 
+          subtitle="mg/L as CaCO₃" 
           value={params.calcium} 
           min={0} 
           max={350} 
-          step={1} 
+          step={0.1} 
           paramKey="calcium" 
         />
         <InputField 
