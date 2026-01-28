@@ -18,7 +18,7 @@ interface Props {
 
 const ScenarioManager: React.FC<Props> = ({ scenarios, onDelete, onRestore, onSave }) => {
   return (
-    <div className="bg-white p-6 rounded-xl shadow-sm border border-slate-200 mt-2 overflow-hidden animate-slide-in">
+    <div className="bg-white p-6 rounded-xl shadow-sm border border-slate-200 mt-2 overflow-hidden">
       <div className="flex justify-between items-center mb-6">
         <h2 className="text-lg font-bold text-slate-800 flex items-center gap-2">
           <div className="bg-amber-100 p-1.5 rounded-md">
