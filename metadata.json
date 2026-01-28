@@ -1,0 +1,5 @@
+{
+  "name": "CCPP & LSI Water Quality Calculator",
+  "description": "A professional tool for calculating Calcium Carbonate Precipitation Potential (CCPP) and Langelier Saturation Index (LSI) for potable water systems, featuring target optimization and visual scenario analysis.",
+  "requestFramePermissions": []
+}
